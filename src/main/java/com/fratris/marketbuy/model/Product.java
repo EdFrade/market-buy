@@ -1,12 +1,12 @@
-package com.fratris.marketbuy.models;
+package com.fratris.marketbuy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -20,14 +20,15 @@ public class Product {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
 
   @NotNull
   @NotEmpty
-  @Size(max = 50)
+  @Length(max = 50)
   private String name;
 
-  @Max(500)
+  @Length(max = 500)
   private String description;
 
   @NotNull
@@ -36,23 +37,31 @@ public class Product {
   @NotNull
   private BigDecimal price;
 
+  @ManyToOne
+  @JoinColumn(name = "id_store")
+  @NotNull
+  @JsonIgnore
+  private Store store;
+
   @CreationTimestamp
+  @JsonIgnore
   private LocalDate creationDate;
 
   @UpdateTimestamp
+  @JsonIgnore
   private LocalDate updateDate;
 
 
   public Product(){
 
   }
-
-  public Product(Long id, @NotNull @NotEmpty @Size(max = 50) String name, @Max(500) String description, @NotNull Integer quantity, @NotNull BigDecimal price) {
+  public Product(Long id, @NotNull @NotEmpty @Size(max = 50) String name, @Max(500) String description, @NotNull Integer quantity, @NotNull BigDecimal price, @NotNull Store store) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.quantity = quantity;
     this.price = price;
+    this.store = store;
   }
 
   public String getName() {
@@ -87,12 +96,21 @@ public class Product {
     this.price = price;
   }
 
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   public Long getId() {
     return id;
   }
-
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public Store getStore() {
+    return store;
+  }
+
+  public void setStore(Store store) {
+    this.store = store;
   }
 
   @Override

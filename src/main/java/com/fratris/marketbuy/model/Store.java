@@ -1,11 +1,16 @@
-package com.fratris.marketbuy.models;
+package com.fratris.marketbuy.model;
 
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,22 +19,24 @@ public class Store {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
 
   @NotNull
   @NotEmpty
-  @Max(50)
+  @Length(max = 50)
   private String name;
 
-  @Max(250)
+  @Length(max = 250)
   private String description;
 
   @OneToOne
   private User owner;
 
-  @OneToMany
-  @JoinColumn(name = "product_id")
-  private Set<Product> products;
+  @OneToMany(mappedBy = "store", orphanRemoval = true)
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private Set<Product> products = new HashSet<>();
 
   public Store(){
 

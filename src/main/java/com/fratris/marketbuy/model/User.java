@@ -1,7 +1,10 @@
-package com.fratris.marketbuy.models;
+package com.fratris.marketbuy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +19,7 @@ public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
   @NotNull
   private String name;
@@ -27,12 +31,14 @@ public class User {
   private String email;
   @NotNull
   @NotEmpty
-  @Min(6)
+  @Length(min = 6)
   private String password;
-  @OneToOne( cascade = CascadeType.ALL, optional = false)
+  @OneToOne( cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
   private Store store;
+  @JsonIgnore
   @CreationTimestamp
   private LocalDate creationDate;
+  @JsonIgnore
   @UpdateTimestamp
   private LocalDate updateDate;
 
@@ -40,8 +46,7 @@ public class User {
 
   }
 
-  public User(Long id, @NotNull String name, @NotNull String cpf, @Email String email, @NotNull @NotEmpty @Min(6) String password, Store store, LocalDate creationDate, LocalDate updateDate) {
-    this.id = id;
+  public User(@NotNull String name, @NotNull String cpf, @Email String email, @NotNull @NotEmpty @Min(6) String password, Store store, LocalDate creationDate, LocalDate updateDate) {
     this.name = name;
     this.cpf = cpf;
     this.email = email;
@@ -49,14 +54,6 @@ public class User {
     this.store = store;
     this.creationDate = creationDate;
     this.updateDate = updateDate;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public String getName() {
@@ -134,4 +131,5 @@ public class User {
   public int hashCode() {
     return Objects.hash(id, name, cpf, email, password, store, creationDate, updateDate);
   }
+
 }
