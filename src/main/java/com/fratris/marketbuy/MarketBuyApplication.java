@@ -1,0 +1,13 @@
+package com.fratris.marketbuy;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MarketBuyApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MarketBuyApplication.class, args);
+	}
+
+}
