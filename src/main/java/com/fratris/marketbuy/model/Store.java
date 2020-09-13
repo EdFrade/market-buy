@@ -2,6 +2,8 @@ package com.fratris.marketbuy.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
@@ -31,11 +33,11 @@ public class Store {
   private String description;
 
   @OneToOne
+  @JsonIdentityReference(alwaysAsId = true)
   private User owner;
 
   @OneToMany(mappedBy = "store", orphanRemoval = true)
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  @JsonIdentityReference(alwaysAsId = true)
   private Set<Product> products = new HashSet<>();
 
   public Store(){
