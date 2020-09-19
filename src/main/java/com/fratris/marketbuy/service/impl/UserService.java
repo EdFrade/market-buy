@@ -1,13 +1,17 @@
 package com.fratris.marketbuy.service.impl;
 
+import com.fratris.marketbuy.exception.DataException;
 import com.fratris.marketbuy.exception.NotFoundException;
 import com.fratris.marketbuy.model.User;
 import com.fratris.marketbuy.repository.UserRepository;
 import com.fratris.marketbuy.service.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.zip.DataFormatException;
 
 @Service
 public class UserService implements GenericService<User, Long> {
@@ -17,6 +21,15 @@ public class UserService implements GenericService<User, Long> {
 
   @Override
   public User save(User obj) {
+    Optional<User> user = repository.findByCpf(obj.getCpf());
+    if(user.isPresent()){
+      throw new DataException("CPF já cadastrado");
+    }
+    return repository.save(obj);
+  }
+
+
+  public User update(User obj){
     return repository.save(obj);
   }
 

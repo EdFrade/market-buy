@@ -1,6 +1,7 @@
 package com.fratris.marketbuy.exception.handle;
 
 import com.fratris.marketbuy.exception.ApiError;
+import com.fratris.marketbuy.exception.DataException;
 import com.fratris.marketbuy.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -46,8 +47,6 @@ public class HandleExceptions {
     if (e.getRootCause() instanceof ConstraintViolationException) {
       ConstraintViolationException cve = (ConstraintViolationException)e.getRootCause();
       Set<ConstraintViolation<?>> violations = cve.getConstraintViolations();
-
-
       result = ResponseEntity.badRequest().body("Dados inválidos:"+ violations.toString());
     } else {
       result = null; // not handled here
@@ -58,6 +57,12 @@ public class HandleExceptions {
   @ExceptionHandler({NotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<String> handleDataException(NotFoundException ex){
+    return  ResponseEntity.badRequest().body(ex.getMessage());
+  }
+
+  @ExceptionHandler({DataException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<String> handleDataException(DataException ex){
     return  ResponseEntity.badRequest().body(ex.getMessage());
   }
 

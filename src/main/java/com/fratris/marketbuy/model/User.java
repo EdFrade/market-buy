@@ -14,12 +14,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
   @NotNull
   private String name;
@@ -27,13 +25,14 @@ public class User {
   @Column(unique = true)
   private String cpf;
   @Email
-  @Column(unique = true)
+  @Column
   private String email;
   @NotNull
   @NotEmpty
   @Length(min = 6)
   private String password;
   @OneToOne( cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
+  @JsonIgnore
   private Store store;
   @JsonIgnore
   @CreationTimestamp
@@ -110,6 +109,14 @@ public class User {
 
   public void setUpdateDate(LocalDate updateDate) {
     this.updateDate = updateDate;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   @Override

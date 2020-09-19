@@ -41,7 +41,7 @@ public class StoreController {
   public ResponseEntity<Store> update(final @PathVariable Long id, final @RequestBody UpdateStoreDto dto){
     Store store = service.getById(id);
     mapper.map(dto, store);
-    return ResponseEntity.ok(service.save(store));
+    return ResponseEntity.ok(service.update(store));
   }
 
   @GetMapping

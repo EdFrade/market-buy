@@ -33,7 +33,7 @@ public class UserController {
   public ResponseEntity<User> update(final @PathVariable Long id, final @Valid @RequestBody UserDto dto){
     User user = service.getById(id);
     mapper.map(dto, user);
-    return ResponseEntity.ok(service.save(user));
+    return ResponseEntity.ok(service.update(user));
   }
 
   @GetMapping
