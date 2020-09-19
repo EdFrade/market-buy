@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class UserController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<User> update(final @PathVariable Long id, final @RequestBody UserDto dto){
+  public ResponseEntity<User> update(final @PathVariable Long id, final @Valid @RequestBody UserDto dto){
     User user = service.getById(id);
     mapper.map(dto, user);
     return ResponseEntity.ok(service.save(user));

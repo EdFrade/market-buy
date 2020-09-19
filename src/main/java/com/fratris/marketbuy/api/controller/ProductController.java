@@ -41,7 +41,7 @@ public class ProductController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<Product> update(final @PathVariable Long id, final @RequestBody Product productRequest){
+  public ResponseEntity<Product> update(final @PathVariable Long id, final @RequestBody ProductDto productRequest){
     Product product = service.getById(id);
     mapper.map(productRequest, product);
     return ResponseEntity.ok(service.save(product));
